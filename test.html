@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Widget - Test Page</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; background: #f5f5f5; }
+    .test-controls { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+    .test-controls button {
+      padding: 10px 20px; border: none; border-radius: 6px;
+      cursor: pointer; font-size: 14px; font-weight: 500;
+    }
+    .btn-open { background: #0077b5; color: #fff; }
+    .btn-open-preset { background: #de182b; color: #fff; }
+    .btn-open-en { background: #333; color: #fff; }
+    .log { margin-top: 20px; padding: 16px; background: #1a1a1a; color: #0f0;
+           border-radius: 8px; font-family: monospace; font-size: 13px;
+           max-height: 300px; overflow-y: auto; }
+    .log-entry { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h1 id="test-title">Booking Widget Test Page</h1>
+  <p id="test-desc">Click a button to open the widget. Events are logged below.</p>
+
+  <div id="test-controls" class="test-controls">
+    <button id="btn-open" class="btn-open" onclick="SimplifyBooking.open()">
+      Open Widget (DE)
+    </button>
+    <button id="btn-open-preset" class="btn-open-preset" onclick="SimplifyBooking.open({
+      consultant: 'anna-becker',
+      topic: 'ERP-Einfuehrung',
+      context: { product: 'ERP Cloud', plan: 'Enterprise' }
+    })">
+      Open with Pre-set Consultant
+    </button>
+    <button id="btn-close" class="btn-open-en" onclick="SimplifyBooking.close()">
+      Close Widget
+    </button>
+  </div>
+
+  <div id="event-log" class="log">
+    <div id="log-header" class="log-entry">-- Event log --</div>
+  </div>
+
+  <script src="dist/widget.js"
+          data-api="http://10.0.99.1:8000"
+          data-consultants-url="https://simplify-erp.de/data/consultants.json"
+          data-lang="de"
+          data-brand="Simplify ERP"
+          data-context-product="ERP Cloud"
+          data-context-plan="Enterprise">
+  </script>
+  <script>
+    document.addEventListener('simplify-booking:ready', function() {
+      log('Widget ready: ' + SimplifyBooking.ready)
+
+      SimplifyBooking.on('booking:started', function(data) {
+        log('booking:started — ' + JSON.stringify(data))
+      })
+      SimplifyBooking.on('booking:confirmed', function(data) {
+        log('booking:confirmed — ' + JSON.stringify(data))
+      })
+      SimplifyBooking.on('widget:closed', function() {
+        log('widget:closed')
+      })
+    })
+
+    function log(msg) {
+      var el = document.getElementById('event-log')
+      var entry = document.createElement('div')
+      entry.className = 'log-entry'
+      entry.textContent = new Date().toLocaleTimeString() + ' | ' + msg
+      el.appendChild(entry)
+      el.scrollTop = el.scrollHeight
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: booking-widget-ingress
+  labels:
+    app: booking-widget
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, OPTIONS"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - booking.simplify-erp.de
+      secretName: booking-widget-tls
+  rules:
+    - host: booking.simplify-erp.de
+      http:
+        paths:
+          - path: /widget.js
+            pathType: Exact
+            backend:
+              service:
+                name: booking-widget-service
+                port:
+                  number: 80
