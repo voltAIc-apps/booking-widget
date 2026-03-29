@@ -337,12 +337,25 @@ export function renderStep4(state, callbacks) {
     ])
   }
 
+  // Multi-select: topic is a comma-separated string of selected values
+  const selectedTopics = (state.visitor.topic || '').split(',').map(s => s.trim()).filter(Boolean)
   const topicChips = (s.topics || []).map((topic, i) => {
+    const isSelected = selectedTopics.includes(topic)
     return el('button', {
       id: `sb-step4-topic-${i}`,
-      class: `sb-topic-chip${state.visitor.topic === topic ? ' sb-selected' : ''}`,
+      class: `sb-topic-chip${isSelected ? ' sb-selected' : ''}`,
       type: 'button',
-      onclick: () => callbacks.onFieldChange('topic', topic),
+      onclick: () => {
+        // Toggle this topic in the comma-separated list
+        const current = (state.visitor.topic || '').split(',').map(s => s.trim()).filter(Boolean)
+        const idx = current.indexOf(topic)
+        if (idx >= 0) {
+          current.splice(idx, 1)
+        } else {
+          current.push(topic)
+        }
+        callbacks.onFieldChange('topic', current.join(', '))
+      },
     }, [topic])
   })
 
