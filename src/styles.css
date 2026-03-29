@@ -283,6 +283,11 @@
   background: var(--sb-cta);
 }
 
+.sb-consultant-photo {
+  object-fit: cover;
+  background: var(--sb-bg-secondary);
+}
+
 .sb-consultant-info {
   flex: 1;
   min-width: 0;
@@ -639,6 +644,30 @@
   font-size: 14px;
   color: var(--sb-text-secondary);
   margin-bottom: 16px;
+}
+
+/* Floating trigger button */
+.sb-floating-trigger {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999998;
+  padding: 14px 24px;
+  background: var(--sb-cta);
+  color: #fff;
+  border: none;
+  border-radius: 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--sb-font);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: background var(--sb-transition), transform var(--sb-transition);
+}
+
+.sb-floating-trigger:hover {
+  background: var(--sb-cta-hover);
+  transform: translateY(-2px);
 }
 
 /* Responsive */

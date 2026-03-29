@@ -2,6 +2,12 @@
 
 Embeddable vanilla JS booking widget. See `booking-widget-spec.md` for full spec.
 
+## Architecture
+
+- **booking-widget** (this repo): frontend popup, consultant data, availability computation, email via EmailJS
+- **app2gcal** (separate repo): Google Calendar operations only (create event, verify booked slots)
+- See `docs/booking_flow.svg` for swim lane diagram
+
 ## Commands
 
 ```bash
@@ -17,3 +23,5 @@ npm run dev      # watch mode
 - All user-visible strings in `src/i18n.js` (de + en).
 - Every HTML element gets a unique `id` attribute.
 - Build produces single `dist/widget.js` with CSS inlined.
+- Consultant JSON files hosted per-brand, not in this repo (samples in `consultants/`).
+- Emails sent via EmailJS from widget, not from app2gcal backend.

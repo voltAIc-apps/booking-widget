@@ -201,15 +201,25 @@ export function renderStep1(state, callbacks) {
 
   // Consultant cards
   state.consultants.forEach((c, i) => {
+    // Profile photo or initials fallback
+    const avatar = c.photo
+      ? el('img', {
+          id: `sb-step1-avatar-${i}`,
+          class: 'sb-consultant-avatar sb-consultant-photo',
+          src: c.photo,
+          alt: c.name,
+        })
+      : el('div', {
+          id: `sb-step1-avatar-${i}`,
+          class: 'sb-consultant-avatar',
+        }, [getInitials(c.name)])
+
     const card = el('div', {
       id: `sb-step1-card-${i}`,
       class: `sb-consultant-card${state.selectedConsultant === c.id ? ' sb-selected' : ''}`,
       onclick: () => callbacks.onSelectConsultant(c.id),
     }, [
-      el('div', {
-        id: `sb-step1-avatar-${i}`,
-        class: 'sb-consultant-avatar',
-      }, [getInitials(c.name)]),
+      avatar,
       el('div', { id: `sb-step1-info-${i}`, class: 'sb-consultant-info' }, [
         el('div', { id: `sb-step1-name-${i}`, class: 'sb-consultant-name' }, [c.name]),
         el('div', { id: `sb-step1-role-${i}`, class: 'sb-consultant-role' }, [c.role || '']),
@@ -478,26 +488,48 @@ function formatDateHuman(dateStr, lang) {
 }
 
 // --- Utility: generate ICS content ---
+// Compatible with Google Calendar, Outlook, Apple Calendar
 export function generateIcs(state) {
   const booking = state.booking || {}
   const consultant = state.consultants.find(c => c.id === state.selectedConsultant)
   const consultantName = consultant ? consultant.name : 'Consultant'
+  const consultantEmail = (consultant && consultant.email) || ''
   const dateStr = state.selectedDate.replace(/-/g, '')
   const timeParts = state.selectedTime.split(':')
   const startH = timeParts[0]
   const startM = timeParts[1]
-  const endH = String(parseInt(startH, 10) + (parseInt(startM, 10) + 30 >= 60 ? 1 : 0)).padStart(2, '0')
-  const endM = String((parseInt(startM, 10) + 30) % 60).padStart(2, '0')
+  const duration = (consultant && consultant.slotDuration) || 30
+  const totalMin = parseInt(startH, 10) * 60 + parseInt(startM, 10) + duration
+  const endH = String(Math.floor(totalMin / 60)).padStart(2, '0')
+  const endM = String(totalMin % 60).padStart(2, '0')
 
   const uid = booking.booking_id || `sb-${Date.now()}`
   const now = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '')
 
-  return [
+  const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//BookingWidget//EN',
     'CALSCALE:GREGORIAN',
     'METHOD:REQUEST',
+    // VTIMEZONE for Europe/Berlin (CET/CEST)
+    'BEGIN:VTIMEZONE',
+    'TZID:Europe/Berlin',
+    'BEGIN:STANDARD',
+    'DTSTART:19701025T030000',
+    'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10',
+    'TZOFFSETFROM:+0200',
+    'TZOFFSETTO:+0100',
+    'TZNAME:CET',
+    'END:STANDARD',
+    'BEGIN:DAYLIGHT',
+    'DTSTART:19700329T020000',
+    'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3',
+    'TZOFFSETFROM:+0100',
+    'TZOFFSETTO:+0200',
+    'TZNAME:CEST',
+    'END:DAYLIGHT',
+    'END:VTIMEZONE',
     'BEGIN:VEVENT',
     `UID:${uid}`,
     `DTSTAMP:${now}`,
@@ -505,8 +537,14 @@ export function generateIcs(state) {
     `DTEND;TZID=Europe/Berlin:${dateStr}T${endH}${endM}00`,
     `SUMMARY:Meeting with ${consultantName}`,
     `DESCRIPTION:Booked via website. Topic: ${state.visitor.topic || ''}`,
-    booking.meet_link ? `URL:${booking.meet_link}` : '',
-    'END:VEVENT',
-    'END:VCALENDAR',
-  ].filter(Boolean).join('\r\n')
+  ]
+
+  if (booking.meet_link) lines.push(`URL:${booking.meet_link}`)
+  if (consultantEmail) lines.push(`ORGANIZER;CN=${consultantName}:mailto:${consultantEmail}`)
+  if (state.visitor.email) lines.push(`ATTENDEE;CN=${state.visitor.name};RSVP=TRUE:mailto:${state.visitor.email}`)
+
+  lines.push('END:VEVENT')
+  lines.push('END:VCALENDAR')
+
+  return lines.join('\r\n')
 }

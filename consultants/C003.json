@@ -1,0 +1,17 @@
+{
+  "id": "C003",
+  "name": "Lisa Schneider",
+  "role": "Cloud Solutions Architect",
+  "email": "lisa.schneider@re-cloud.io",
+  "phone": "+49 170 3456789",
+  "photo": "https://re-cloud.io/team/lisa-schneider.jpg",
+  "schedule": {
+    "mon": ["09:00-12:00", "13:30-17:00"],
+    "tue": ["09:00-12:00", "13:30-17:00"],
+    "wed": ["09:00-12:00"],
+    "thu": ["09:00-12:00", "13:30-17:00"],
+    "fri": ["09:00-12:00", "13:30-16:00"]
+  },
+  "slotDuration": 30,
+  "exceptions": {}
+}

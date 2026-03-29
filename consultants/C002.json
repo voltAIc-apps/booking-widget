@@ -1,0 +1,17 @@
+{
+  "id": "C002",
+  "name": "Markus Hoffmann",
+  "role": "Process Automation Specialist",
+  "email": "markus.hoffmann@simplify-erp.de",
+  "phone": "+49 170 2345678",
+  "photo": "https://simplify-erp.de/team/markus-hoffmann.jpg",
+  "schedule": {
+    "mon": ["10:00-12:00", "13:00-16:00"],
+    "tue": ["10:00-12:00", "13:00-16:00"],
+    "wed": ["10:00-12:00", "13:00-16:00"],
+    "thu": ["10:00-12:00", "13:00-16:00"],
+    "fri": ["10:00-12:00", "13:00-15:00"]
+  },
+  "slotDuration": 30,
+  "exceptions": {}
+}

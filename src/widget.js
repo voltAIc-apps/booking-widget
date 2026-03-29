@@ -1,7 +1,10 @@
 // Entry point — registers window.SimplifyBooking, bootstraps UI
 import { t } from './i18n.js'
 import { collectContext, mergeContext } from './context.js'
-import { getConsultants, getAvailability, postBooking } from './api.js'
+import { fetchConsultantsByIds, getConsultants, getAvailability, postBooking } from './api.js'
+import { computeScheduleSlots, mergeWithBackend } from './availability.js'
+import { sendBookingEmails } from './email.js'
+import { detectHostStyles } from './theme.js'
 import {
   el, renderProgressBar, renderHeader, renderLoading, renderError,
   renderStep1, renderStep2, renderStep3, renderStep4, renderStep5,
@@ -12,14 +15,35 @@ import cssText from './styles.css'
 // --- Find own script tag ---
 const scriptEl = document.currentScript || document.querySelector('script[src*="widget.js"]')
 
+// --- Derive script origin for relative URLs ---
+const scriptOrigin = scriptEl && scriptEl.src
+  ? scriptEl.src.replace(/\/[^/]*$/, '')
+  : ''
+
 // --- Read config from data attributes ---
 const config = {
   apiUrl: (scriptEl && scriptEl.dataset.api) || '',
+  // Per-brand consultant loading
+  consultantsBase: (scriptEl && scriptEl.dataset.consultantsBase) || '',
+  consultantIds: (scriptEl && scriptEl.dataset.consultants) || '',
+  // Legacy: single URL with all consultants
   consultantsUrl: (scriptEl && scriptEl.dataset.consultantsUrl) || '',
   lang: (scriptEl && scriptEl.dataset.lang) || 'de',
   brand: (scriptEl && scriptEl.dataset.brand) || '',
   consultant: (scriptEl && scriptEl.dataset.consultant) || '',
   apiKey: (scriptEl && scriptEl.dataset.apiKey) || '',
+  // Theme detection
+  theme: (scriptEl && scriptEl.dataset.theme) || 'auto',
+  // Floating trigger button
+  trigger: (scriptEl && scriptEl.dataset.trigger) || '',
+  // EmailJS config
+  emailjs: {
+    service: (scriptEl && scriptEl.dataset.emailjsService) || 'service_01zc3pa',
+    templateVisitor: (scriptEl && scriptEl.dataset.emailjsTemplateVisitor) || '',
+    templateConsultant: (scriptEl && scriptEl.dataset.emailjsTemplateConsultant) || '',
+    template: (scriptEl && scriptEl.dataset.emailjsTemplate) || 'template_x7v725t',
+    key: (scriptEl && scriptEl.dataset.emailjsKey) || 'jXwGkXBbqbOks2wJI',
+  },
 }
 
 // --- Auto-collected context ---
@@ -70,13 +94,22 @@ function _emit(event, data) {
   }
 }
 
-// --- Inject CSS ---
+// --- Inject CSS with optional host-style detection ---
 function injectStyles() {
   if (document.getElementById('sb-styles')) return
   const style = document.createElement('style')
   style.id = 'sb-styles'
   style.textContent = cssText
   document.head.appendChild(style)
+
+  // Auto-detect host page styles and apply as CSS variable overrides
+  if (config.theme === 'auto') {
+    const detected = detectHostStyles()
+    const root = document.documentElement
+    for (const [prop, val] of Object.entries(detected)) {
+      root.style.setProperty(prop, val)
+    }
+  }
 }
 
 // --- Build modal shell (once) ---
@@ -255,7 +288,18 @@ async function loadConsultants() {
   state.loading = true
   render()
 
-  const result = await getConsultants(state.apiUrl, state.consultantsUrl)
+  let result
+
+  // Per-brand: fetch individual consultant JSON files
+  if (config.consultantIds) {
+    const ids = config.consultantIds.split(',').map(s => s.trim()).filter(Boolean)
+    const base = config.consultantsBase || scriptOrigin + '/consultants'
+    result = await fetchConsultantsByIds(base, ids)
+  } else {
+    // Legacy: single consultants URL via app2gcal
+    result = await getConsultants(state.apiUrl, state.consultantsUrl)
+  }
+
   state.loading = false
 
   if (result.ok) {
@@ -267,12 +311,36 @@ async function loadConsultants() {
 }
 
 // --- Load availability ---
+// Computes slots from consultant schedule, then verifies against app2gcal backend
 async function loadAvailability() {
   state.loading = true
   state.availableSlots = []
   render()
 
   const consultantId = state.selectedConsultant === '__best__' ? '' : state.selectedConsultant
+  const consultant = state.consultants.find(c => c.id === consultantId)
+
+  // If consultant has a schedule, compute slots client-side first
+  if (consultant && consultant.schedule) {
+    const scheduleSlots = computeScheduleSlots(consultant, state.selectedDate)
+    state.availableSlots = scheduleSlots
+    state.loading = false
+    render()
+
+    // Then async-verify against backend for already-booked slots
+    if (state.apiUrl) {
+      const backendResult = await getAvailability(
+        state.apiUrl, state.consultantsUrl || '', consultantId, state.selectedDate, state.selectedDate
+      )
+      if (backendResult.ok && backendResult.data && backendResult.data.slots) {
+        state.availableSlots = mergeWithBackend(scheduleSlots, backendResult.data.slots)
+        render()
+      }
+    }
+    return
+  }
+
+  // Legacy/fallback: load entirely from backend
   const result = await getAvailability(
     state.apiUrl, state.consultantsUrl, consultantId, state.selectedDate, state.selectedDate
   )
@@ -281,8 +349,7 @@ async function loadAvailability() {
   if (result.ok && result.data && result.data.slots) {
     state.availableSlots = result.data.slots
   } else {
-    // Spec: if availability fetch fails, show slots as unknown (all available)
-    // Use consultant's configured slots if available, otherwise defaults
+    // Spec: if availability fetch fails, show default slots (all available)
     state.availableSlots = getDefaultSlots()
   }
   render()
@@ -341,6 +408,11 @@ async function submitBooking() {
       visitor: { ...state.visitor },
       context: finalContext,
     })
+
+    // Send confirmation emails via EmailJS (non-blocking)
+    const consultant = state.consultants.find(c => c.id === state.selectedConsultant)
+    const icsContent = generateIcs(state)
+    sendBookingEmails(state, consultant, icsContent, config.emailjs)
   } else {
     state.error = t(state.lang, 'errors.bookingFailed')
   }
@@ -385,6 +457,39 @@ function unlockScroll() {
     scrollLockCount = 0
     document.body.style.overflow = savedOverflow
   }
+}
+
+// --- Auto-bind trigger elements on host page ---
+function bindTriggers() {
+  const triggers = document.querySelectorAll('[data-booking-trigger]')
+  triggers.forEach(trigger => {
+    const consultantId = trigger.dataset.bookingConsultant || ''
+    const topic = trigger.dataset.bookingTopic || ''
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault()
+      const opts = {}
+      if (consultantId) opts.consultant = consultantId
+      if (topic) opts.topic = topic
+      open(opts)
+    })
+  })
+}
+
+// --- Inject floating trigger button ---
+function injectFloatingTrigger() {
+  if (config.trigger !== 'floating') return
+  injectStyles()
+
+  const lang = config.lang
+  const label = t(lang, 'common.bookNow')
+  const btn = el('button', {
+    id: 'sb-floating-trigger',
+    class: 'sb-floating-trigger',
+    type: 'button',
+    'aria-label': label,
+    onclick: () => open(),
+  }, [label])
+  document.body.appendChild(btn)
 }
 
 // --- Public API ---
@@ -443,6 +548,10 @@ window.SimplifyBooking = {
   ready: true,
   on,
 }
+
+// Bind data-booking-trigger elements and optional floating button
+bindTriggers()
+injectFloatingTrigger()
 
 // Dispatch ready event
 document.dispatchEvent(new CustomEvent('simplify-booking:ready'))

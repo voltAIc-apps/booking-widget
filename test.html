@@ -5,7 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking Widget - Test Page</title>
   <style>
-    body { font-family: sans-serif; padding: 40px; background: #f5f5f5; }
+    body { font-family: 'Segoe UI', sans-serif; padding: 40px; background: #f5f5f5; color: #1a1a1a; }
+    h1 { color: #0077b5; }
+    a { color: #0077b5; }
     .test-controls { margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap; }
     .test-controls button {
       padding: 10px 20px; border: none; border-radius: 6px;
@@ -14,6 +16,8 @@
     .btn-open { background: #0077b5; color: #fff; }
     .btn-open-preset { background: #de182b; color: #fff; }
     .btn-open-en { background: #333; color: #fff; }
+    .brand-section { margin-top: 30px; padding: 20px; background: #fff; border-radius: 8px; border: 1px solid #e5e7eb; }
+    .brand-section h3 { margin-top: 0; }
     .log { margin-top: 20px; padding: 16px; background: #1a1a1a; color: #0f0;
            border-radius: 8px; font-family: monospace; font-size: 13px;
            max-height: 300px; overflow-y: auto; }
@@ -22,31 +26,49 @@
 </head>
 <body>
   <h1 id="test-title">Booking Widget Test Page</h1>
-  <p id="test-desc">Click a button to open the widget. Events are logged below.</p>
+  <p id="test-desc">Click a button or trigger link to open the widget. Events logged below.</p>
 
   <div id="test-controls" class="test-controls">
     <button id="btn-open" class="btn-open" onclick="SimplifyBooking.open()">
       Open Widget (DE)
     </button>
     <button id="btn-open-preset" class="btn-open-preset" onclick="SimplifyBooking.open({
-      consultant: 'anna-becker',
+      consultant: 'C001',
       topic: 'ERP-Einfuehrung',
       context: { product: 'ERP Cloud', plan: 'Enterprise' }
     })">
-      Open with Pre-set Consultant
+      Open with C001 Pre-set
     </button>
     <button id="btn-close" class="btn-open-en" onclick="SimplifyBooking.close()">
       Close Widget
     </button>
   </div>
 
+  <!-- Trigger button examples -->
+  <div id="trigger-examples" class="brand-section">
+    <h3 id="trigger-title">Trigger Buttons (data-booking-trigger)</h3>
+    <div class="test-controls">
+      <button id="trigger-generic" data-booking-trigger class="btn-open">
+        Termin buchen (generic)
+      </button>
+      <a id="trigger-c001" href="#" data-booking-trigger data-booking-consultant="C001" data-booking-topic="ERP-Einfuehrung">
+        Talk to Anna about ERP
+      </a>
+      <a id="trigger-c002" href="#" data-booking-trigger data-booking-consultant="C002" data-booking-topic="Prozessautomatisierung">
+        Talk to Markus about Automation
+      </a>
+    </div>
+  </div>
+
   <div id="event-log" class="log">
     <div id="log-header" class="log-entry">-- Event log --</div>
   </div>
 
+  <!-- Widget with per-brand consultant loading -->
   <script src="dist/widget.js"
           data-api="http://10.0.99.1:8000"
-          data-consultants-url="https://simplify-erp.de/data/consultants.json"
+          data-consultants-base="consultants"
+          data-consultants="C001,C002,C003,C004"
           data-lang="de"
           data-brand="Simplify ERP"
           data-context-product="ERP Cloud"
@@ -57,10 +79,10 @@
       log('Widget ready: ' + SimplifyBooking.ready)
 
       SimplifyBooking.on('booking:started', function(data) {
-        log('booking:started — ' + JSON.stringify(data))
+        log('booking:started -- ' + JSON.stringify(data))
       })
       SimplifyBooking.on('booking:confirmed', function(data) {
-        log('booking:confirmed — ' + JSON.stringify(data))
+        log('booking:confirmed -- ' + JSON.stringify(data))
       })
       SimplifyBooking.on('widget:closed', function() {
         log('widget:closed')

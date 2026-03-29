@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 680" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#16a34a"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="680" rx="8" fill="#f8fafc"/>
+
+  <!-- Title -->
+  <text x="460" y="36" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Booking Flow: Swimming Lanes</text>
+  <text x="460" y="56" text-anchor="middle" font-size="12" fill="#64748b">booking-widget (frontend) + app2gcal (backend)</text>
+
+  <!-- Lane headers -->
+  <rect x="20" y="74" width="200" height="36" rx="6" fill="#2563eb"/>
+  <text x="120" y="97" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">booking-widget</text>
+
+  <rect x="240" y="74" width="200" height="36" rx="6" fill="#7c3aed"/>
+  <text x="340" y="97" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Brand Website</text>
+
+  <rect x="460" y="74" width="200" height="36" rx="6" fill="#16a34a"/>
+  <text x="560" y="97" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">app2gcal</text>
+
+  <rect x="680" y="74" width="220" height="36" rx="6" fill="#ea580c"/>
+  <text x="790" y="97" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">EmailJS</text>
+
+  <!-- Lane dividers -->
+  <line x1="230" y1="74" x2="230" y2="660" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="450" y1="74" x2="450" y2="660" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+  <line x1="670" y1="74" x2="670" y2="660" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <!-- Step 0: User clicks trigger -->
+  <rect x="30" y="130" width="180" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="154" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">User clicks trigger</text>
+  <text x="120" y="166" text-anchor="middle" font-size="9" fill="#3b82f6">[data-booking-trigger]</text>
+
+  <!-- Step 1: Load consultants -->
+  <path d="M120,170 L120,190" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="192" width="180" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="213" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">1. Fetch consultants</text>
+
+  <!-- Arrow to brand website -->
+  <path d="M210,209 L250,209" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+
+  <rect x="252" y="192" width="176" height="34" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="340" y="208" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">consultants/C001.json</text>
+  <text x="340" y="220" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">consultants/C002.json ...</text>
+
+  <!-- Arrow back -->
+  <path d="M252,218 L210,218" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Step 2: Choose date (widget only) -->
+  <path d="M120,226 L120,250" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="252" width="180" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="273" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">2. Choose date</text>
+
+  <!-- Step 3: Compute + verify availability -->
+  <path d="M120,286 L120,310" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="312" width="180" height="46" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="333" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">3. Compute slots</text>
+  <text x="120" y="348" text-anchor="middle" font-size="9" fill="#3b82f6">from schedule JSON</text>
+
+  <!-- Arrow to app2gcal for verification -->
+  <path d="M210,335 L470,335" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="350" y="328" text-anchor="middle" font-size="9" fill="#16a34a">verify booked slots</text>
+
+  <rect x="472" y="318" width="176" height="34" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="560" y="339" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">GET /availability</text>
+
+  <!-- Arrow back from app2gcal -->
+  <path d="M472,345 L210,345" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+  <!-- Step 4: User fills form -->
+  <path d="M120,358 L120,382" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="384" width="180" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="405" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">4. Visitor details form</text>
+
+  <!-- Step 5: Submit booking -->
+  <path d="M120,418 L120,442" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="444" width="180" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="465" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">5. Submit booking</text>
+
+  <!-- Arrow to app2gcal -->
+  <path d="M210,461 L470,461" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="350" y="454" text-anchor="middle" font-size="9" fill="#16a34a">POST booking payload</text>
+
+  <rect x="472" y="444" width="176" height="46" rx="6" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="560" y="463" text-anchor="middle" font-size="10" font-weight="600" fill="#166534">POST /bookings</text>
+  <text x="560" y="480" text-anchor="middle" font-size="9" fill="#16a34a">Create Google Calendar event</text>
+
+  <!-- Arrow back: booking_id + meet_link -->
+  <path d="M472,480 L210,480" stroke="#16a34a" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="350" y="494" text-anchor="middle" font-size="9" fill="#16a34a">booking_id + meet_link</text>
+
+  <!-- Step 6: Send emails -->
+  <path d="M120,478 L120,518" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="520" width="180" height="46" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="541" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">6. Send emails</text>
+  <text x="120" y="556" text-anchor="middle" font-size="9" fill="#3b82f6">with iCal attachments</text>
+
+  <!-- Arrow to EmailJS -->
+  <path d="M210,543 L690,543" stroke="#ea580c" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="490" y="536" text-anchor="middle" font-size="9" fill="#ea580c">visitor confirm + consultant notify</text>
+
+  <rect x="692" y="520" width="196" height="46" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="790" y="541" text-anchor="middle" font-size="10" font-weight="600" fill="#9a3412">EmailJS REST API</text>
+  <text x="790" y="556" text-anchor="middle" font-size="9" fill="#ea580c">2 emails + .ics attachments</text>
+
+  <!-- Step 7: Confirmation -->
+  <path d="M120,566 L120,590" stroke="#475569" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="30" y="592" width="180" height="40" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="120" y="611" text-anchor="middle" font-size="11" font-weight="600" fill="#1e40af">7. Confirmation screen</text>
+  <text x="120" y="625" text-anchor="middle" font-size="9" fill="#3b82f6">Meet link + ICS download</text>
+
+  <!-- Legend -->
+  <rect x="20" y="645" width="880" height="28" rx="4" fill="#f1f5f9"/>
+  <circle cx="44" cy="659" r="6" fill="#2563eb"/>
+  <text x="56" y="663" font-size="10" fill="#475569">Frontend (widget.js)</text>
+  <circle cx="194" cy="659" r="6" fill="#7c3aed"/>
+  <text x="206" y="663" font-size="10" fill="#475569">Brand static JSON</text>
+  <circle cx="344" cy="659" r="6" fill="#16a34a"/>
+  <text x="356" y="663" font-size="10" fill="#475569">app2gcal (calendar only)</text>
+  <circle cx="524" cy="659" r="6" fill="#ea580c"/>
+  <text x="536" y="663" font-size="10" fill="#475569">EmailJS (mail + iCal)</text>
+  <line x1="640" y1="659" x2="670" y2="659" stroke="#475569" stroke-width="1.5"/>
+  <text x="678" y="663" font-size="10" fill="#475569">request</text>
+  <line x1="730" y1="659" x2="760" y2="659" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="768" y="663" font-size="10" fill="#475569">response</text>
+</svg>

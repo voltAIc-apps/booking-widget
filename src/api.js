@@ -1,4 +1,4 @@
-// All fetch calls to app2gcal backend
+// API calls — per-brand consultant JSON fetching + app2gcal backend
 
 const TIMEOUT_MS = 10000
 
@@ -30,13 +30,37 @@ async function request(url, options = {}) {
   }
 }
 
-// GET /api/v1/consultants?consultants_url={url}
+// Fetch individual consultant JSON files from brand website
+// baseUrl: e.g. "https://simplify-erp.de/data/consultants"
+// ids: e.g. ["C001", "C002", "C003"]
+export async function fetchConsultantsByIds(baseUrl, ids) {
+  const trimmedBase = baseUrl.replace(/\/$/, '')
+  const fetches = ids.map(id => request(`${trimmedBase}/${id}.json`))
+  const results = await Promise.allSettled(fetches)
+
+  const consultants = []
+  results.forEach((result, i) => {
+    if (result.status === 'fulfilled' && result.value.ok) {
+      consultants.push(result.value.data)
+    } else {
+      console.warn(`[booking-widget] Failed to load consultant ${ids[i]}`)
+    }
+  })
+
+  if (consultants.length === 0) {
+    return { ok: false, data: null, error: 'No consultants could be loaded' }
+  }
+  return { ok: true, data: consultants, error: null }
+}
+
+// Legacy: GET /api/v1/consultants?consultants_url={url}
 export function getConsultants(baseUrl, consultantsUrl) {
   const url = `${baseUrl}/api/v1/consultants?consultants_url=${encodeURIComponent(consultantsUrl)}`
   return request(url)
 }
 
 // GET /api/v1/availability?consultants_url={url}&consultant_id={id}&date_from={from}&date_to={to}
+// Used to verify schedule-computed slots against already-booked times
 export function getAvailability(baseUrl, consultantsUrl, consultantId, dateFrom, dateTo) {
   const params = new URLSearchParams({
     consultants_url: consultantsUrl,

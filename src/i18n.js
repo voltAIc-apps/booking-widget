@@ -63,6 +63,7 @@ export const strings = {
       retry: 'Erneut versuchen',
       step: 'Schritt',
       of: 'von',
+      bookNow: 'Termin buchen',
     },
     errors: {
       networkError: 'Verbindungsfehler. Bitte versuchen Sie es erneut.',
@@ -135,6 +136,7 @@ export const strings = {
       retry: 'Try again',
       step: 'Step',
       of: 'of',
+      bookNow: 'Book appointment',
     },
     errors: {
       networkError: 'Connection error. Please try again.',

@@ -1,0 +1,17 @@
+{
+  "id": "C001",
+  "name": "Anna Becker",
+  "role": "Senior ERP Consultant",
+  "email": "anna.becker@simplify-erp.de",
+  "phone": "+49 170 1234567",
+  "photo": "https://simplify-erp.de/team/anna-becker.jpg",
+  "schedule": {
+    "mon": ["09:00-12:00", "14:00-17:00"],
+    "tue": ["09:00-12:00", "14:00-17:00"],
+    "wed": ["09:00-12:00", "14:00-17:00"],
+    "thu": ["09:00-12:00", "14:00-17:00"],
+    "fri": ["09:00-12:00", "14:00-16:00"]
+  },
+  "slotDuration": 30,
+  "exceptions": {}
+}

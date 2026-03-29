@@ -14,9 +14,48 @@ spec:
   tls:
     - hosts:
         - booking.simplify-erp.de
-      secretName: booking-widget-tls
+      secretName: booking-simplify-erp-tls
+    - hosts:
+        - booking.re-cloud.io
+      secretName: booking-re-cloud-tls
+    - hosts:
+        - booking.voltaic.systems
+      secretName: booking-voltaic-tls
+    - hosts:
+        - booking.poweron.software
+      secretName: booking-poweron-tls
   rules:
     - host: booking.simplify-erp.de
+      http:
+        paths:
+          - path: /widget.js
+            pathType: Exact
+            backend:
+              service:
+                name: booking-widget-service
+                port:
+                  number: 80
+    - host: booking.re-cloud.io
+      http:
+        paths:
+          - path: /widget.js
+            pathType: Exact
+            backend:
+              service:
+                name: booking-widget-service
+                port:
+                  number: 80
+    - host: booking.voltaic.systems
+      http:
+        paths:
+          - path: /widget.js
+            pathType: Exact
+            backend:
+              service:
+                name: booking-widget-service
+                port:
+                  number: 80
+    - host: booking.poweron.software
       http:
         paths:
           - path: /widget.js
