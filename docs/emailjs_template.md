@@ -14,65 +14,77 @@
 Copy everything below into the EmailJS template Content field:
 
 ```html
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; background: #f4f4f5; -webkit-text-size-adjust: none;">
+<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 560px; margin: 32px auto; color: #18181b; line-height: 1.6;">
 
-  <div style="background: #0077b5; padding: 24px; border-radius: 12px 12px 0 0; text-align: center;">
-    <h1 style="color: #ffffff; margin: 0; font-size: 22px;">Meeting Request</h1>
-  </div>
+  <!-- Card -->
+  <div style="background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);">
 
-  <div style="background: #f9fafb; padding: 24px; border: 1px solid #e5e7eb; border-top: none;">
-
-    <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
-      <tr>
-        <td style="padding: 10px 12px; font-weight: 600; color: #6b7280; width: 140px; vertical-align: top;">Date</td>
-        <td style="padding: 10px 12px;">{{date}}</td>
-      </tr>
-      <tr style="background: #ffffff;">
-        <td style="padding: 10px 12px; font-weight: 600; color: #6b7280; vertical-align: top;">Time</td>
-        <td style="padding: 10px 12px;">{{time}} (Europe/Berlin)</td>
-      </tr>
-      <tr>
-        <td style="padding: 10px 12px; font-weight: 600; color: #6b7280; vertical-align: top;">Topic</td>
-        <td style="padding: 10px 12px;">{{topic}}</td>
-      </tr>
-      <tr style="background: #ffffff;">
-        <td style="padding: 10px 12px; font-weight: 600; color: #6b7280; vertical-align: top;">Consultant</td>
-        <td style="padding: 10px 12px;">{{consultant_name}}</td>
-      </tr>
-    </table>
-
-    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">
-
-    <h3 style="margin: 0 0 12px; font-size: 16px; color: #0077b5;">Visitor Details</h3>
-    <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
-      <tr>
-        <td style="padding: 8px 12px; font-weight: 600; color: #6b7280; width: 140px;">Name</td>
-        <td style="padding: 8px 12px;">{{visitor_name}}</td>
-      </tr>
-      <tr style="background: #ffffff;">
-        <td style="padding: 8px 12px; font-weight: 600; color: #6b7280;">Email</td>
-        <td style="padding: 8px 12px;"><a href="mailto:{{visitor_email}}" style="color: #0077b5;">{{visitor_email}}</a></td>
-      </tr>
-      <tr>
-        <td style="padding: 8px 12px; font-weight: 600; color: #6b7280;">Company</td>
-        <td style="padding: 8px 12px;">{{visitor_company}}</td>
-      </tr>
-    </table>
-
-    {{#meet_link}}
-    <div style="margin: 24px 0; text-align: center;">
-      <a href="{{meet_link}}" style="display: inline-block; padding: 12px 28px; background: #0077b5; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 15px;">Join Private Video Conf</a>
+    <!-- Header -->
+    <div style="padding: 32px 32px 24px; border-bottom: 1px solid #f0f0f0;">
+      <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #a1a1aa; margin-bottom: 8px;">Meeting Request</div>
+      <div style="font-size: 22px; font-weight: 700; color: #18181b;">{{topic}}</div>
     </div>
-    {{/meet_link}}
+
+    <!-- Date & Time block -->
+    <div style="padding: 24px 32px; background: #fafafa;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+        <tr>
+          <td style="width: 50%; vertical-align: top;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #a1a1aa; margin-bottom: 4px;">Date</div>
+            <div style="font-size: 18px; font-weight: 600; color: #18181b;">{{date}}</div>
+          </td>
+          <td style="width: 50%; vertical-align: top;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #a1a1aa; margin-bottom: 4px;">Time</div>
+            <div style="font-size: 18px; font-weight: 600; color: #18181b;">{{time}} <span style="font-size: 13px; font-weight: 400; color: #71717a;">CET</span></div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Details -->
+    <div style="padding: 24px 32px;">
+      <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; font-size: 14px;">
+        <tr>
+          <td style="padding: 8px 0; color: #71717a; width: 110px; vertical-align: top;">Consultant</td>
+          <td style="padding: 8px 0; font-weight: 500;">{{consultant_name}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #71717a; vertical-align: top;">Requested by</td>
+          <td style="padding: 8px 0; font-weight: 500;">{{visitor_name}}</td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #71717a; vertical-align: top;">Email</td>
+          <td style="padding: 8px 0;"><a href="mailto:{{visitor_email}}" style="color: #18181b; text-decoration: underline; text-underline-offset: 2px;">{{visitor_email}}</a></td>
+        </tr>
+        <tr>
+          <td style="padding: 8px 0; color: #71717a; vertical-align: top;">Company</td>
+          <td style="padding: 8px 0; font-weight: 500;">{{visitor_company}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Video link button -->
+    <div style="padding: 0 32px 28px; text-align: center;">
+      <a href="{{meet_link}}" style="display: inline-block; padding: 14px 32px; background: #18181b; color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 600; font-size: 14px; letter-spacing: 0.01em;">Join Video Conference &#8599;</a>
+    </div>
 
   </div>
 
-  <div style="padding: 16px 24px; text-align: center; font-size: 12px; color: #9ca3af; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
-    This meeting was requested via the online booking widget.<br>
-    Please confirm or reschedule at your earliest convenience.
+  <!-- Footer -->
+  <div style="padding: 20px 8px; text-align: center; font-size: 12px; color: #a1a1aa; line-height: 1.5;">
+    Requested via online booking &middot; Please confirm or reschedule at your earliest convenience.
   </div>
 
 </div>
+</body>
+</html>
 ```
 
 ---
@@ -90,7 +102,7 @@ Copy everything below into the EmailJS template Content field:
 | `{{date}}` | Selected date | `2026-04-02` |
 | `{{time}}` | Selected time | `10:00` |
 | `{{topic}}` | Selected topic(s) | `ERP Implementation, Data Migration` |
-| `{{meet_link}}` | Google Calendar (when available) | `https://meet.google.com/abc-defg-hij` |
+| `{{meet_link}}` | Private video conf URL | `https://vid.rocket.re-cloud.io/ashant.chalasani` |
 | `{{ics_content}}` | Generated ICS (for attachment) | `BEGIN:VCALENDAR...` |
 
 ## Setup Steps
