@@ -347,8 +347,6 @@ export function renderStep2(state, callbacks) {
 // --- Step 3: Choose time ---
 export function renderStep3(state, callbacks) {
   const lang = state.lang
-  const container = el('div', { id: 'sb-step3' })
-
   const slots = state.availableSlots || []
   const morning = slots.filter(s => {
     const h = parseInt(s.time.split(':')[0], 10)
@@ -381,16 +379,19 @@ export function renderStep3(state, callbacks) {
 
   const morningGroup = renderGroup(t(lang, 'step3.morning'), morning, 'am')
   const afternoonGroup = renderGroup(t(lang, 'step3.afternoon'), afternoon, 'pm')
-  if (morningGroup) container.appendChild(morningGroup)
-  if (afternoonGroup) container.appendChild(afternoonGroup)
+
+  // 2-column layout: morning left, afternoon right
+  const grid = el('div', { id: 'sb-step3', class: 'sb-step3-grid' })
+  if (morningGroup) grid.appendChild(morningGroup)
+  if (afternoonGroup) grid.appendChild(afternoonGroup)
 
   if (slots.length === 0) {
-    container.appendChild(el('div', { id: 'sb-step3-empty', class: 'sb-loading' }, [
+    grid.appendChild(el('div', { id: 'sb-step3-empty', class: 'sb-loading' }, [
       t(lang, 'step3.unavailable'),
     ]))
   }
 
-  return container
+  return grid
 }
 
 // --- Step 4: Your details ---
@@ -474,17 +475,19 @@ export function renderStep4(state, callbacks) {
     field('email', s.step4.email, 'email', s.step4.emailPlaceholder, state.visitor.email, true),
     field('company', s.step4.company, 'text', s.step4.companyPlaceholder, state.visitor.company, true),
 
-    // Topic chips
-    el('div', { id: 'sb-step4-field-topic', class: 'sb-field' }, [
+    // Topic chips (full width)
+    el('div', { id: 'sb-step4-field-topic', class: 'sb-field sb-field-full' }, [
       topicLabel,
       el('div', { id: 'sb-step4-topics', class: 'sb-topics' }, topicChips),
     ]),
 
-    // Additional attendees
-    field('attendees', s.step4.attendees, 'text', s.step4.attendeesPlaceholder, state.additionalAttendees, false),
+    // Additional attendees (full width)
+    el('div', { id: 'sb-step4-field-attendees-wrap', class: 'sb-field-full' }, [
+      field('attendees', s.step4.attendees, 'text', s.step4.attendeesPlaceholder, state.additionalAttendees, false),
+    ]),
 
     // Honeypot — off-screen, plausible name
-    el('div', { id: 'sb-step4-hp-wrap', class: 'sb-honeypot' }, [
+    el('div', { id: 'sb-step4-hp-wrap', class: 'sb-honeypot sb-field-full' }, [
       el('input', {
         id: 'sb-step4-input-website',
         type: 'text',
@@ -497,8 +500,8 @@ export function renderStep4(state, callbacks) {
       }),
     ]),
 
-    // GDPR
-    gdprLabel,
+    // GDPR (full width)
+    el('div', { id: 'sb-step4-gdpr-wrap', class: 'sb-field-full' }, [gdprLabel]),
   ])
 
   return form
@@ -544,13 +547,17 @@ export function renderStep5(state, callbacks) {
   }, [svgCalendar(), ' ', t(lang, 'step5.downloadIcs')]))
 
   return el('div', { id: 'sb-step5', class: 'sb-confirmation' }, [
-    el('div', { id: 'sb-step5-check', class: 'sb-check-icon' }, [svgCheck()]),
-    el('div', { id: 'sb-step5-title', class: 'sb-confirmation-title' }, [t(lang, 'step5.title')]),
-    el('div', { id: 'sb-step5-text', class: 'sb-confirmation-text' }, [
-      booking.fallback ? t(lang, 'step5.confirmedFallback') : t(lang, 'step5.confirmed')
+    el('div', { id: 'sb-step5-left', class: 'sb-confirmation-left' }, [
+      el('div', { id: 'sb-step5-check', class: 'sb-check-icon' }, [svgCheck()]),
+      el('div', { id: 'sb-step5-title', class: 'sb-confirmation-title' }, [t(lang, 'step5.title')]),
+      el('div', { id: 'sb-step5-text', class: 'sb-confirmation-text' }, [
+        booking.fallback ? t(lang, 'step5.confirmedFallback') : t(lang, 'step5.confirmed')
+      ]),
     ]),
-    el('div', { id: 'sb-step5-summary', class: 'sb-summary' }, summaryEls),
-    el('div', { id: 'sb-step5-actions', class: 'sb-confirmation-actions' }, actions),
+    el('div', { id: 'sb-step5-right', class: 'sb-confirmation-right' }, [
+      el('div', { id: 'sb-step5-summary', class: 'sb-summary' }, summaryEls),
+      el('div', { id: 'sb-step5-actions', class: 'sb-confirmation-actions' }, actions),
+    ]),
   ])
 }
 

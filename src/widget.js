@@ -41,7 +41,7 @@ const config = {
     service: (scriptEl && scriptEl.dataset.emailjsService) || 'service_01zc3pa',
     templateVisitor: (scriptEl && scriptEl.dataset.emailjsTemplateVisitor) || '',
     templateConsultant: (scriptEl && scriptEl.dataset.emailjsTemplateConsultant) || '',
-    template: (scriptEl && scriptEl.dataset.emailjsTemplate) || 'template_x7v725t',
+    template: (scriptEl && scriptEl.dataset.emailjsTemplate) || 'template_wafmb6q',
     key: (scriptEl && scriptEl.dataset.emailjsKey) || 'jXwGkXBbqbOks2wJI',
   },
 }
@@ -476,7 +476,11 @@ function downloadIcs() {
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = 'booking.ics'
+  // meeting-with-firstname-lastname-brand.ics
+  const consultant = state.consultants.find(c => c.id === state.selectedConsultant)
+  const cName = consultant ? consultant.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z-]/g, '') : 'consultant'
+  const brand = (state.context && state.context.brand) ? state.context.brand.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z-]/g, '') : 'meeting'
+  a.download = `meeting-with-${cName}-${brand}.ics`
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()

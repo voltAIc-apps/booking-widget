@@ -109,7 +109,7 @@ Copy everything below into the EmailJS template Content field:
 ## Setup Steps
 
 1. Go to https://dashboard.emailjs.com/admin/templates
-2. Create new template (or edit existing `template_x7v725t`)
+2. Create new template (or edit existing `template_wafmb6q`)
 3. Set **To Email** to `{{to_email}}`
 4. Set **From Name** to `{{visitor_name}} via Booking Widget`
 5. Set **Reply To** to `{{visitor_email}}`
