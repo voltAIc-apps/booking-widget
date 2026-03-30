@@ -23,6 +23,12 @@ async function sendEmail(serviceId, templateId, publicKey, templateParams) {
   }
 }
 
+// Calendar sharing instruction for fallback emails
+const CALENDAR_SETUP_NOTE =
+  'HINWEIS: Der Kalenderzugriff konnte nicht hergestellt werden. ' +
+  'Bitte teilen Sie Ihren Google Kalender mit app2gcal@odoo-calender-166504.iam.gserviceaccount.com ' +
+  '(Berechtigung: "Termine aendern"), damit kuenftige Buchungen automatisch eingetragen werden.'
+
 // Send booking emails to both visitor and consultant
 // Non-blocking — failures are logged but do not affect the booking flow
 export async function sendBookingEmails(state, consultant, icsContent, emailConfig) {
@@ -63,10 +69,12 @@ export async function sendBookingEmails(state, consultant, icsContent, emailConf
   // Email to consultant (notification)
   let consultantOk = false
   if (consultantEmail) {
+    const isFallback = state.booking && state.booking.fallback
     consultantOk = await sendEmail(serviceId, consultantTemplate, publicKey, {
       ...sharedParams,
       to_email: consultantEmail,
       to_name: consultantName,
+      calendar_note: isFallback ? CALENDAR_SETUP_NOTE : '',
     })
   }
 
