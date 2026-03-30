@@ -35,8 +35,12 @@ export async function sendBookingEmails(state, consultant, icsContent, emailConf
   const consultantName = consultant ? consultant.name : 'Consultant'
   const consultantEmail = consultant ? consultant.email : ''
 
+  // Brand name from context (set via data-brand on script tag)
+  const brand = (state.context && state.context.brand) || document.title || ''
+
   // Shared params
   const sharedParams = {
+    brand,
     consultant_name: consultantName,
     visitor_name: state.visitor.name,
     visitor_email: state.visitor.email,

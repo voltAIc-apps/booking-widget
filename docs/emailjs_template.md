@@ -28,7 +28,7 @@ Copy everything below into the EmailJS template Content field:
 
     <!-- Header -->
     <div style="padding: 32px 32px 24px; border-bottom: 1px solid #f0f0f0;">
-      <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #a1a1aa; margin-bottom: 8px;">Meeting Request</div>
+      <div style="font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #a1a1aa; margin-bottom: 8px;">{{brand}} &mdash; Meeting Request</div>
       <div style="font-size: 22px; font-weight: 700; color: #18181b;">{{topic}}</div>
     </div>
 
@@ -79,7 +79,7 @@ Copy everything below into the EmailJS template Content field:
 
   <!-- Footer -->
   <div style="padding: 20px 8px; text-align: center; font-size: 12px; color: #a1a1aa; line-height: 1.5;">
-    Requested via online booking &middot; Please confirm or reschedule at your earliest convenience.
+    Requested via {{brand}} online booking &middot; Please confirm or reschedule at your earliest convenience.
   </div>
 
 </div>
@@ -93,6 +93,7 @@ Copy everything below into the EmailJS template Content field:
 
 | Variable | Source | Example |
 |----------|--------|---------|
+| `{{brand}}` | Source website brand (data-brand) | `Simplify ERP` |
 | `{{to_email}}` | Recipient (visitor or consultant) | `john@example.com` |
 | `{{to_name}}` | Recipient name | `John Doe` |
 | `{{visitor_name}}` | Booking form | `John Doe` |
