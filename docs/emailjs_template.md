@@ -3,8 +3,8 @@
 ## Template Settings (in EmailJS dashboard)
 
 **To Email:** `{{to_email}}`
-**From Name:** `{{visitor_name}} via Booking Widget`
-**Reply To:** `{{visitor_email}}`
+**From Name:** `{{consultant_name}} via {{brand}}`
+**Reply To:** `{{consultant_email}}`
 **Subject:** `Meeting Request: {{topic}} — {{date}} {{time}}`
 
 ---
@@ -100,6 +100,7 @@ Copy everything below into the EmailJS template Content field:
 | `{{visitor_email}}` | Booking form | `john@example.com` |
 | `{{visitor_company}}` | Booking form | `Acme GmbH` |
 | `{{consultant_name}}` | consultants.json | `Ashant Chalasani` |
+| `{{consultant_email}}` | consultants.json | `ach@simplify-erp.de` |
 | `{{date}}` | Selected date | `2026-04-02` |
 | `{{time}}` | Selected time | `10:00` |
 | `{{topic}}` | Selected topic(s) | `ERP Implementation, Data Migration` |

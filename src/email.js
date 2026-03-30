@@ -42,6 +42,7 @@ export async function sendBookingEmails(state, consultant, icsContent, emailConf
   const sharedParams = {
     brand,
     consultant_name: consultantName,
+    consultant_email: consultantEmail,
     visitor_name: state.visitor.name,
     visitor_email: state.visitor.email,
     visitor_company: state.visitor.company || '',
