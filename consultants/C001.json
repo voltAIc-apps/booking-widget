@@ -1,18 +1,18 @@
 {
-  "id": "C001",
-  "name": "Anna Becker",
-  "role": "Senior ERP Consultant",
-  "email": "anna.becker@simplify-erp.de",
-  "phone": "+49 170 1234567",
-  "photo": "https://simplify-erp.de/team/anna-becker.jpg",
-  "linkedin": "https://www.linkedin.com/in/ashantchalasani",
+  "id": "ashant-chalasani",
+  "name": "Ashant Chalasani",
+  "role": "Managing Director",
+  "bio": "ERP strategy, process innovation, infrastructure design and AI automation.",
+  "email": "ach@simplify-erp.de",
+  "linkedin": "https://www.linkedin.com/in/ashantchalasani/",
+  "photo": "/team/ashant-chalasani.jpg",
+  "slotDuration": 30,
   "schedule": {
     "mon": ["09:00-12:00", "14:00-17:00"],
     "tue": ["09:00-12:00", "14:00-17:00"],
     "wed": ["09:00-12:00", "14:00-17:00"],
     "thu": ["09:00-12:00", "14:00-17:00"],
-    "fri": ["09:00-12:00", "14:00-16:00"]
+    "fri": ["09:00-12:00", "14:00-16:30"]
   },
-  "slotDuration": 30,
   "exceptions": {}
 }

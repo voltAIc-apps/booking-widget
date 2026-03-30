@@ -1,18 +1,18 @@
 {
-  "id": "C002",
-  "name": "Markus Hoffmann",
-  "role": "Process Automation Specialist",
-  "email": "markus.hoffmann@simplify-erp.de",
-  "phone": "+49 170 2345678",
-  "photo": "https://simplify-erp.de/team/markus-hoffmann.jpg",
+  "id": "pascal-koeth",
+  "name": "Pascal K\u00f6th",
+  "role": "ERP Consultant",
+  "bio": "Pre-sales consulting, requirements analysis and solution demonstrations.",
+  "email": "pko@simplify-erp.de",
   "linkedin": "https://www.linkedin.com/in/pascal-k%C3%B6th-40a0b68b/",
-  "schedule": {
-    "mon": ["10:00-12:00", "13:00-16:00"],
-    "tue": ["10:00-12:00", "13:00-16:00"],
-    "wed": ["10:00-12:00", "13:00-16:00"],
-    "thu": ["10:00-12:00", "13:00-16:00"],
-    "fri": ["10:00-12:00", "13:00-15:00"]
-  },
+  "photo": "/team/pascal-koeth.svg",
   "slotDuration": 30,
+  "schedule": {
+    "mon": ["09:00-12:00", "14:00-17:00"],
+    "tue": ["09:00-12:00", "14:00-17:00"],
+    "wed": ["09:00-12:00", "14:00-17:00"],
+    "thu": ["09:00-12:00", "14:00-17:00"],
+    "fri": ["09:00-12:00", "14:00-16:00"]
+  },
   "exceptions": {}
 }

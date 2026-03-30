@@ -1,18 +1,18 @@
 {
-  "id": "C003",
-  "name": "Lisa Schneider",
-  "role": "Cloud Solutions Architect",
-  "email": "lisa.schneider@re-cloud.io",
-  "phone": "+49 170 3456789",
-  "photo": "https://re-cloud.io/team/lisa-schneider.jpg",
+  "id": "vy-vo-trung",
+  "name": "Vy Vo (Alieh) Trung",
+  "role": "Technical Consultant",
+  "bio": "ERP programming, custom module development and AI solution engineering.",
+  "email": "vvtr@simplify-erp.de",
   "linkedin": "https://www.linkedin.com/in/trungvy247/",
-  "schedule": {
-    "mon": ["09:00-12:00", "13:30-17:00"],
-    "tue": ["09:00-12:00", "13:30-17:00"],
-    "wed": ["09:00-12:00"],
-    "thu": ["09:00-12:00", "13:30-17:00"],
-    "fri": ["09:00-12:00", "13:30-16:00"]
-  },
+  "photo": "/team/vy-vo-trung.jpg",
   "slotDuration": 30,
+  "schedule": {
+    "mon": ["09:00-12:00", "14:00-17:00"],
+    "tue": ["09:00-12:00", "14:00-17:00"],
+    "wed": ["09:00-12:00", "14:00-17:00"],
+    "thu": ["09:00-12:00", "14:00-17:00"],
+    "fri": ["09:00-12:00", "14:00-16:00"]
+  },
   "exceptions": {}
 }
