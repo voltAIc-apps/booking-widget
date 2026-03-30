@@ -633,7 +633,7 @@ export function generateIcs(state) {
   const timeParts = state.selectedTime.split(':')
   const startH = timeParts[0]
   const startM = timeParts[1]
-  const duration = (consultant && consultant.slotDuration) || 30
+  const duration = (consultant && (consultant.meetingDuration || consultant.slotDuration)) || 30
   const totalMin = parseInt(startH, 10) * 60 + parseInt(startM, 10) + duration
   const endH = String(Math.floor(totalMin / 60)).padStart(2, '0')
   const endM = String(totalMin % 60).padStart(2, '0')

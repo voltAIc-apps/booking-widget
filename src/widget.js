@@ -318,7 +318,8 @@ async function loadConsultants() {
   if (result.ok) {
     state.consultants = result.data
   } else {
-    state.error = t(state.lang, 'errors.consultantsFailed')
+    // No consultants available — show only "Best match" option (no error)
+    state.consultants = []
   }
   render()
 }

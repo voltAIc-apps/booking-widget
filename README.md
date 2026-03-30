@@ -144,9 +144,11 @@ Each brand hosts JSON files at their `data-consultants-base` URL. Schema:
 | `slotDuration` | no | Minutes per slot (default 30) |
 | `exceptions` | no | Date overrides. `[]` = fully blocked. Array of ranges = override that day |
 
-Sample files in `consultants/` folder.
+Consultant files are hosted on each brand's website (e.g. `https://simplify-erp.de/data/consultants/C001.json`), not in this repo.
 
-Alternatively, `data-consultants-url` can point to a single JSON array with all consultant objects (legacy mode).
+Alternatively, `data-consultants-url` can point to a single JSON array with all consultant objects.
+
+If consultant data cannot be loaded (missing files, no config), the widget gracefully shows only the "Best match" option.
 
 ## Availability
 
