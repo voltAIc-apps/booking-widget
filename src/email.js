@@ -18,7 +18,7 @@ async function sendEmail(serviceId, templateId, publicKey, templateParams) {
     })
     return res.ok
   } catch (err) {
-    console.warn('[booking-widget] Email send failed:', err.message)
+    console.warn('[meetly] Email send failed:', err.message)
     return false
   }
 }
@@ -70,8 +70,8 @@ export async function sendBookingEmails(state, consultant, icsContent, emailConf
     })
   }
 
-  if (!visitorOk) console.warn('[booking-widget] Visitor confirmation email failed')
-  if (!consultantOk && consultantEmail) console.warn('[booking-widget] Consultant notification email failed')
+  if (!visitorOk) console.warn('[meetly] Visitor confirmation email failed')
+  if (!consultantOk && consultantEmail) console.warn('[meetly] Consultant notification email failed')
 
   return { visitorOk, consultantOk }
 }

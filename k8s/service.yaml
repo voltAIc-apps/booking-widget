@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: booking-widget-service
+  name: meetly-service
   labels:
-    app: booking-widget
+    app: meetly
 spec:
   type: ClusterIP
   ports:
@@ -11,4 +11,4 @@ spec:
       targetPort: 80
       protocol: TCP
   selector:
-    app: booking-widget
+    app: meetly

@@ -1,4 +1,4 @@
-# booking-widget
+# meetly
 
 Embeddable vanilla JS booking widget. See `booking-widget-spec.md` for full spec.
 

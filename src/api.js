@@ -43,7 +43,7 @@ export async function fetchConsultantsByIds(baseUrl, ids) {
     if (result.status === 'fulfilled' && result.value.ok) {
       consultants.push(result.value.data)
     } else {
-      console.warn(`[booking-widget] Failed to load consultant ${ids[i]}`)
+      console.warn(`[meetly] Failed to load consultant ${ids[i]}`)
     }
   })
 

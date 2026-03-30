@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: booking-widget
+  name: meetly
   labels:
-    app: booking-widget
+    app: meetly
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: booking-widget
+      app: meetly
   template:
     metadata:
       labels:
-        app: booking-widget
+        app: meetly
     spec:
       containers:
         - name: nginx
@@ -49,15 +49,15 @@ spec:
       volumes:
         - name: widget-dist
           configMap:
-            name: booking-widget-dist
+            name: meetly-dist
         - name: nginx-conf
           configMap:
-            name: booking-widget-nginx-conf
+            name: meetly-nginx-conf
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: booking-widget-nginx-conf
+  name: meetly-nginx-conf
 data:
   default.conf: |
     server {
