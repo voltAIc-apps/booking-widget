@@ -1,0 +1,141 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meetly-web
+  namespace: meetly
+  labels:
+    app: meetly
+    component: web
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: meetly
+      component: web
+  template:
+    metadata:
+      labels:
+        app: meetly
+        component: web
+    spec:
+      imagePullSecrets:
+        - name: harbor-re-cloud
+      containers:
+        - name: calcom
+          image: crepo.re-cloud.io/meetly/calcom:patched
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+              protocol: TCP
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: POSTGRES_DB
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: meetly-secrets
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgresql:5432/$(POSTGRES_DB)"
+            - name: DATABASE_DIRECT_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgresql:5432/$(POSTGRES_DB)"
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: meetly-secrets
+                  key: NEXTAUTH_SECRET
+            - name: CALENDSO_ENCRYPTION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: meetly-secrets
+                  key: CALENDSO_ENCRYPTION_KEY
+            - name: NEXT_PUBLIC_WEBAPP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: NEXT_PUBLIC_WEBAPP_URL
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: NEXTAUTH_URL
+            - name: CALCOM_TELEMETRY_DISABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: CALCOM_TELEMETRY_DISABLED
+            - name: NEXT_PUBLIC_LICENSE_CONSENT
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: NEXT_PUBLIC_LICENSE_CONSENT
+            - name: ALLOWED_HOSTNAMES
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: ALLOWED_HOSTNAMES
+            - name: EMAIL_FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: EMAIL_FROM
+            - name: EMAIL_FROM_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: EMAIL_FROM_NAME
+            - name: EMAIL_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: EMAIL_SERVER_HOST
+            - name: EMAIL_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: EMAIL_SERVER_PORT
+            - name: EMAIL_SERVER_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: meetly-config
+                  key: EMAIL_SERVER_USER
+            - name: EMAIL_SERVER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: meetly-secrets
+                  key: EMAIL_SERVER_PASSWORD
+            - name: GOOGLE_API_CREDENTIALS
+              valueFrom:
+                secretKeyRef:
+                  name: meetly-secrets
+                  key: GOOGLE_API_CREDENTIALS
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          livenessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5

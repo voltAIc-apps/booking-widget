@@ -18,7 +18,7 @@ export default function TwoFactor({ center = true, autoFocus = true }) {
   });
 
   useEffect(() => {
-    if (value) methods.setValue("totpCode", value);
+    if (value) methods.setValue("totpCode", value.replace(/\s/g, ""));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 

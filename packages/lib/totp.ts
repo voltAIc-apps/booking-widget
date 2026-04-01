@@ -26,7 +26,7 @@ export const totpAuthenticatorCheck = (
     window,
     ...rest,
   });
-  return authenticator.check(token, secret);
+  return authenticator.check(token.replace(/\D/g, ""), secret);
 };
 
 /**
@@ -44,5 +44,5 @@ export const totpRawCheck = (token: string, secret: string, opts: Partial<TOTPOp
     window,
     ...rest,
   });
-  return authenticator.check(token, secret);
+  return authenticator.check(token.replace(/\D/g, ""), secret);
 };

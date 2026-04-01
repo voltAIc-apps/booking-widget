@@ -1,0 +1,21 @@
+FROM calcom/cal.com:latest
+
+# Fix 2FA: react-digit-input sends spaces in TOTP codes ("1 2 3 4 5 6")
+# which causes authenticator.check() to fail.
+
+# Backend fix: strip non-digit chars from TOTP token before verification
+# totpAuthenticatorCheck: .check(a,e) → .check(a.replace(/\D/g,""),e)
+# totpRawCheck: .check(a,d) → .check(a.replace(/\D/g,""),d)
+RUN TOTP_CHUNK=$(grep -rl 'totpAuthenticatorCheck\|totpRawCheck' \
+      /calcom/apps/web/.next/standalone/apps/web/.next/server/chunks/ssr/ \
+      --include="*.js" | head -1) && \
+    echo "Patching TOTP backend: $TOTP_CHUNK" && \
+    sed -i 's/}).check(a,e)}/}).check(a.replace(\/\\D\/g,""),e)}/g' "$TOTP_CHUNK" && \
+    sed -i 's/}).check(a,d)}/}).check(a.replace(\/\\D\/g,""),d)}/g' "$TOTP_CHUNK"
+
+# Frontend fix: strip spaces from totpCode before setting form value
+RUN TF_CHUNK=$(grep -rl 'setValue.*totpCode' \
+      /calcom/apps/web/.next/standalone/apps/web/.next/server/chunks/ssr/ \
+      --include="*.js" | grep _7ab98e4a | head -1) && \
+    echo "Patching TwoFactor frontend: $TF_CHUNK" && \
+    sed -i 's/m.setValue("totpCode",c)/m.setValue("totpCode",c.replace(\/\\s\/g,""))/g' "$TF_CHUNK"
